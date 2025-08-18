@@ -1,0 +1,563 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Decor EdgeLabel — Filament Configurator (ui2 + stretch fix)</title>
+
+  <!-- Import map for bare specifiers -->
+  <script type="importmap">
+  {
+    "imports": {
+      "three": "https://unpkg.com/three@0.160.1/build/three.module.js",
+      "three/addons/": "https://unpkg.com/three@0.160.1/examples/jsm/"
+    }
+  }
+  </script>
+
+  <style>
+    :root { --bg:#0f1115; --panel:#171a21; --muted:#9aa4b2; --text:#e6e9ef; --accent:#62a5ff; --radius:16px; }
+    html,body{height:100%;margin:0}
+    body{font-family:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Inter,Arial;background:var(--bg);color:var(--text);display:flex;justify-content:center}
+    .wrap{display:grid;grid-template-columns:1fr 380px;gap:16px;width:min(1200px,100%);padding:12px;box-sizing:border-box}
+    @media(max-width:960px){.wrap{grid-template-columns:1fr}}
+    #c{width:100%;height:calc(100vh - 24px);min-height:420px;border-radius:16px;
+       background:radial-gradient(1200px 600px at 50% -200px, rgba(255,255,255,0.10), rgba(255,255,255,0) 60%),
+                  linear-gradient(180deg, #2371c4 0%, #1e4a91 100%); display:block;}
+    .panel{background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.01));border:1px solid rgba(255,255,255,.08);backdrop-filter:blur(8px);border-radius:16px;padding:14px;display:flex;flex-direction:column;gap:10px}
+    .title{font-size:18px;font-weight:700}
+    .muted{color:var(--muted);font-size:12px}
+    .row{display:flex;gap:10px;align-items:center}
+    .grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+    .field{display:flex;flex-direction:column;gap:6px;margin:6px 0}
+    label{font-size:12px;color:var(--muted)}
+    select,button,input[type=number]{height:36px;background:#0d1016;color:var(--text);border:1px solid rgba(255,255,255,.12);border-radius:10px;padding:0 10px;outline:none}
+    button{cursor:pointer;transition:transform .05s ease}
+    button.primary{background:linear-gradient(180deg,#2e6bea,#1f54be);border:1px solid #2d64da}
+    .chips{display:flex;flex-wrap:wrap;gap:8px}
+    .chip{padding:6px 10px;border-radius:999px;border:1px solid rgba(255,255,255,.12);background:#0d1016;cursor:pointer;font-size:12px}
+    .chip:hover{border-color:rgba(255,255,255,.24)}
+    .small{font-size:11px;color:var(--muted)}
+    .hr{height:1px;background:rgba(255,255,255,.06);margin:8px 0;border:0}
+    .swatch{display:inline-block;width:16px;height:16px;margin-right:8px;border-radius:4px;border:1px solid rgba(255,255,255,.25);box-shadow:inset 0 0 0 1px rgba(0,0,0,.15);vertical-align:middle;flex:0 0 16px;}
+    .control-row{display:flex;align-items:center;gap:.5rem;}
+    .mini{height:28px;padding:0 8px;font-size:12px;opacity:.9}
+    .mini:disabled{opacity:.5;cursor:not-allowed}
+    .status{position:fixed;left:12px;bottom:12px;background:#1b2330;border:1px solid rgba(255,255,255,.12);border-radius:10px;padding:8px 10px;font-size:12px;max-width:min(720px,90vw);white-space:pre-wrap}
+    .status.ok{display:none}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <canvas id="c"></canvas>
+
+    <!-- ui2 layout: base colors above, accent colors grouped together -->
+    <div class="panel">
+      <div class="title">Decor EdgeLabel — Filament Configurator</div>
+      <div class="muted">Swappable accent GLBs. Base: <code>edgelabel.glb</code>.</div>
+
+      <div class="field"><label>Preset combos</label><div id="presetChips" class="chips"></div></div>
+      <hr class="hr"/>
+
+      <!-- Base model colors -->
+      <div>
+        <div class="field">
+          <label>Faceplate filament</label>
+          <div class="control-row">
+            <span id="swatchFace" class="swatch"></span>
+            <select id="faceSelect"></select>
+            <button id="buyFace" class="mini">Buy</button>
+          </div>
+        </div>
+        <div class="field">
+          <label>Backer color</label>
+          <div class="control-row">
+            <span id="swatchBacker" class="swatch"></span>
+            <select id="backerSelect"></select>
+            <button id="buyBacker" class="mini">Buy</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="grid2">
+        <div class="field">
+          <label>Label color</label>
+          <div class="control-row">
+            <span id="swatchLabel" class="swatch"></span>
+            <select id="labelSelect"></select>
+            <button id="buyLabel" class="mini">Buy</button>
+          </div>
+        </div>
+        <div></div>
+      </div>
+
+      <hr class="hr"/>
+
+      <div class="field">
+        <label>Text color</label>
+        <div class="control-row">
+          <span id="swatchText" class="swatch"></span>
+          <select id="textSelect"></select>
+            <button id="buyText" class="mini">Buy</button>
+        </div>
+      </div>
+
+      <hr class="hr"/>
+
+      <!-- Accent controls -->
+      <div class="field">
+        <label>Accent style</label>
+        <select id="accentStyle">
+          <option value="original">accent_original (1 color)</option>
+          <option value="slat">accent_slat (2 colors)</option>
+        </select>
+      </div>
+
+      <div>
+        <div class="field">
+          <label>Accent color (material: “Accent”)</label>
+          <div class="control-row">
+            <span id="swatchAccent" class="swatch"></span>
+            <select id="accentSelect"></select>
+            <button id="buyAccent" class="mini">Buy</button>
+            <a id="accentPrintables" class="mini" href="#" target="_blank" rel="noopener">Printables</a>
+          </div>
+        </div>
+
+        <div class="field" id="accentTwoWrap" style="display:none">
+          <label>Second accent color (material: “Accent_2”)</label>
+          <div class="control-row">
+            <span id="swatchAccent2" class="swatch"></span>
+            <select id="accent2Select"></select>
+            <button id="buyAccent2" class="mini">Buy</button>
+          </div>
+        </div>
+      </div>
+
+
+
+
+      <!-- Hidden rotate block -->
+      <div class="field" style="display:none">
+        <label>Rotate accent</label>
+        <div class="row">
+          <button id="rot0">0°</button>
+          <button id="rot180">180°</button>
+          <button id="frameBase">Frame Base</button>
+          <button id="frameAll">Frame Both</button>
+          <button id="axesToggle">Axes</button>
+        </div>
+        <div class="small" id="bboxInfo">bbox: —</div>
+      </div>
+
+      <div class="grid2" style="display:none">
+        <div class="field">
+          <label>Offset X (mm)</label>
+          <input id="offX" type="number" value="0" step="0.1" />
+        </div>
+        <div class="field">
+          <label>Offset Y (mm)</label>
+          <input id="offY" type="number" value="0" step="0.1" />
+        </div>
+      </div>
+      <div class="field" style="display:none">
+        <label>Offset Z (mm)</label>
+        <input id="offZ" type="number" value="0" step="0.1" />
+      </div>
+
+      <div class="row" style="gap:8px; margin-top:6px;">
+        <button id="copyURL" class="primary">Copy Share Link</button>
+        <button id="reset">Reset Accent</button>
+      </div>
+
+      <div class="small" style="margin-top:6px;">
+        Tip: Add an Empty named <strong>AccentAnchor</strong> inside <code>edgelabel.glb</code> to snap accents in place.
+      </div>
+    </div>
+  </div>
+
+  <div id="status" class="status ok"></div>
+
+  <script type="module">
+    import * as THREE from 'three';
+    import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+    import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+
+    const ASSET_PATH = './';
+    const STATUS = document.getElementById('status');
+    function status(msg, isError=true){ STATUS.classList.remove('ok'); STATUS.textContent = msg; (isError?console.error:console.log)(msg); }
+
+    // UI
+    const $ = (q)=>document.querySelector(q);
+    const canvas       = $('#c'); const chipsWrap = $('#presetChips');
+    const faceSel      = $('#faceSelect');  const accentSel = $('#accentSelect');
+    const backerSel    = $('#backerSelect');const labelSel  = $('#labelSelect');
+    const textSel      = $('#textSelect');
+    const accentStyle  = $('#accentStyle');
+    const swFace = $('#swatchFace'), swAccent = $('#swatchAccent'), swBacker = $('#swatchBacker'), swLabel=$('#swatchLabel'), swAccent2=$('#swatchAccent2'), swText= $('#swatchText');
+    const accent2Wrap = $('#accentTwoWrap'); const accent2Sel = $('#accent2Select');
+    const rot0 = $('#rot0'); const rot180 = $('#rot180'); const offX = $('#offX'); const offY = $('#offY'); const offZ = $('#offZ');
+    const resetBtn = $('#reset'); const copyURL = $('#copyURL');
+    const frameBaseBtn = $('#frameBase'); const frameAllBtn = $('#frameAll'); const axesToggleBtn = $('#axesToggle');
+
+    // Scene
+    const renderer = new THREE.WebGLRenderer({ canvas, antialias:true, alpha:true });
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    renderer.outputColorSpace = THREE.SRGBColorSpace;
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(35, 1, 0.01, 1000);
+    camera.position.set(0.25, 0.25, 0.6);
+    const controls = new OrbitControls(camera, renderer.domElement); controls.enableDamping = true;
+
+    // Lighting
+    const hemi = new THREE.HemisphereLight(0xffffff, 0x444444, 1.0); hemi.position.set(0, 1, 0); scene.add(hemi);
+    const dir = new THREE.DirectionalLight(0xffffff, 1.6); dir.position.set(3, 5, 4); scene.add(dir);
+
+    const loader = new GLTFLoader();
+
+    // Model roots
+    let baseRoot=null, accentRoot=null, accentAnchor=null;
+    let axesHelper=null;
+
+    // Filaments (fallback palette + presets)
+    let FILAMENTS = [
+      { id:'basic-black', brand:'Generic', name:'Black', hex:'#1a1a1a', metallic:0.0, roughness:0.6 },
+      { id:'basic-white', brand:'Generic', name:'White', hex:'#eeeeee', metallic:0.0, roughness:0.5 },
+      { id:'silver-silk', brand:'Generic', name:'Silver', hex:'#c0c0c0', metallic:0.6, roughness:0.3 },
+      { id:'gold-silk', brand:'Generic', name:'Gold', hex:'#d9b245', metallic:0.7, roughness:0.35 },
+      { id:'slate', brand:'Generic', name:'Slate', hex:'#4b5563', metallic:0.1, roughness:0.55 }
+    ];
+
+  let PRESETS = [];
+
+async function loadPresets() {
+  try {
+    const res = await fetch("presets.json");
+    PRESETS = await res.json();
+    buildPresetChips(); // re-render the buttons once loaded
+  } catch (err) {
+    console.error("Failed to load presets.json", err);
+  }
+}
+
+function buildPresetChips() {
+  chipsWrap.innerHTML = "";
+  PRESETS.forEach(preset => {
+    const btn = document.createElement("button");
+    btn.textContent = preset.name || preset.title || preset.id;
+    btn.className = "chip";
+    btn.onclick = () => applyPreset(preset);
+    chipsWrap.appendChild(btn);
+  });
+}
+
+function applyPreset(preset) {
+  if (preset.face)   faceSel.value   = resolveFilament(preset.face);
+  if (preset.accent) accentSel.value = resolveFilament(preset.accent);
+  if (preset.backer) backerSel.value = resolveFilament(preset.backer);
+  if (preset.label)  labelSel.value  = resolveFilament(preset.label);
+  if (preset.text)   textSel.value   = resolveFilament(preset.text);
+
+  applyCurrentSelection();
+      refreshAllBuyButtons();
+      updateAccentPrintables();
+}
+
+// load presets right after DOM is ready
+document.addEventListener("DOMContentLoaded", () => { console.log('DOMContentLoaded→loadPresets'); loadPresets(); });
+
+
+    // Resolve an id or fuzzy text to an existing FILAMENTS entry
+    function resolveFilament(ref){
+      if (!ref) return null;
+      if (!Array.isArray(FILAMENTS) || FILAMENTS.length===0) return null;
+      // Try exact id
+      let hit = FILAMENTS.find(f=> (f.id||'').toLowerCase() === String(ref).toLowerCase());
+      if (hit) return hit.id;
+      // Fuzzy by name or brand+name
+      const q = String(ref).trim().toLowerCase();
+      hit = FILAMENTS.find(f=> (f.name||'').toLowerCase().includes(q) || (`${f.brand||''} ${f.name||''}`).toLowerCase().includes(q));
+      if (hit) return hit.id;
+      // Fuzzy by hex (rare but why not)
+      hit = FILAMENTS.find(f=> (f.hex||'').toLowerCase() === q);
+      if (hit) return hit.id;
+      // Fallback to first
+      return FILAMENTS[0].id;
+    }
+    
+
+    async function tryLoadFilamentsJSON(){
+      try{
+        const res = await fetch('filaments.json', { cache: 'no-cache' });
+        if (!res.ok) throw new Error('HTTP '+res.status);
+        const data = await res.json();
+        if (Array.isArray(data) && data.length){ FILAMENTS = data; console.log('Loaded filaments.json ('+data.length+' entries).'); }
+      }catch(e){ console.warn('Using fallback palette. '+e.message); }
+    }
+
+    function setOptionFromFilament(f){ const opt=document.createElement('option'); opt.value=f.id; opt.textContent=`${f.brand} — ${f.name}`; opt.dataset.hex=f.hex; opt.dataset.metallic=f.metallic??0.0; opt.dataset.roughness=f.roughness??0.6; return opt; }
+
+    function populateSelectors(){
+      faceSel.innerHTML=accentSel.innerHTML=backerSel.innerHTML=labelSel.innerHTML=textSel.innerHTML=accent2Sel.innerHTML='';
+      FILAMENTS.forEach(f=>{
+        const opt=setOptionFromFilament(f);
+        faceSel.appendChild(opt.cloneNode(true)); accentSel.appendChild(opt.cloneNode(true));
+        backerSel.appendChild(opt.cloneNode(true)); labelSel.appendChild(opt.cloneNode(true)); textSel.appendChild(opt.cloneNode(true)); accent2Sel.appendChild(opt.cloneNode(true));
+      });
+      chipsWrap.innerHTML='';
+      PRESETS.forEach(p=>{
+        const b=document.createElement('button');
+        b.className='chip'; b.textContent=p.label;
+        b.onclick=()=>{
+          // Support face/accent/backer/label/text keys as id or fuzzy strings
+          if (p.face   !== undefined) faceSel.value   = resolveFilament(p.face);
+          if (p.accent !== undefined) accentSel.value = resolveFilament(p.accent);
+          if (p.backer !== undefined) backerSel.value = resolveFilament(p.backer);
+          if (p.label  !== undefined) labelSel.value  = resolveFilament(p.label);
+          if (p.text   !== undefined && typeof textSel !== 'undefined' && textSel) textSel.value = resolveFilament(p.text);
+          applyCurrentSelection();
+        };
+        chipsWrap.appendChild(b);
+      });
+    }
+
+    function hexToThreeColor(hex){ const c=new THREE.Color(); try{ c.set(hex);}catch{ c.set('#ffffff'); } return c; }
+
+    function applyFilamentToThree(root, matName, filament, {warnIfMissing=true}={}){
+      if (!root || !filament) return;
+      const color=hexToThreeColor(filament.hex);
+      const metallic=Number(filament.metallic??0.0);
+      const roughness=Number(filament.roughness??0.6);
+      let hits=0;
+      root.traverse(obj=>{
+        if (obj.isMesh){
+          const mats=Array.isArray(obj.material)?obj.material:[obj.material];
+          for (const m of mats){
+            if (!m) continue;
+            const name=(m.name||'').toLowerCase();
+            const target=matName.toLowerCase();
+            if (name===target || name.startsWith(target)){
+              if (!m.isMeshStandardMaterial){ obj.material=new THREE.MeshStandardMaterial({ name:m.name||matName }); }
+              const mat=Array.isArray(obj.material)?obj.material[0]:obj.material;
+              mat.color.copy(color); mat.metalness=metallic; mat.roughness=roughness; mat.needsUpdate=true; hits++;
+            }
+          }
+        }
+      });
+      if (hits===0 && warnIfMissing){ status(`Material "${matName}" not found on ${root===baseRoot?'base':'accent'} model.`); }
+    }
+
+    
+    function getFilamentById(fid){
+      return (FILAMENTS||[]).find(f=>String(f.id).toLowerCase()===String(fid).toLowerCase()) || null;
+    }
+
+    function updateBuyButton(btnEl, selEl){
+      if (!btnEl || !selEl) return;
+      const val = selEl.value;
+      const f = getFilamentById(val);
+      const href = f && f.link ? f.link : null;
+      btnEl.disabled = !href;
+      btnEl.onclick = href ? () => window.open(href, '_blank', 'noopener') : null;
+      btnEl.title = href ? `Open product page for ${f.brand||''} ${f.name||''}` : 'No link available';
+    }
+
+    function refreshAllBuyButtons(){
+      updateBuyButton(document.getElementById('buyFace'),   document.getElementById('faceSelect'));
+      updateBuyButton(document.getElementById('buyBacker'), document.getElementById('backerSelect'));
+      updateBuyButton(document.getElementById('buyLabel'),  document.getElementById('labelSelect'));
+      const txtSel = document.getElementById('textSelect'); if (txtSel) updateBuyButton(document.getElementById('buyText'), txtSel);
+      updateBuyButton(document.getElementById('buyAccent'), document.getElementById('accentSelect'));
+      const acc2Sel = document.getElementById('accent2Select'); if (acc2Sel) updateBuyButton(document.getElementById('buyAccent2'), acc2Sel);
+    }
+
+    // Update Printables link based on accent style
+    function updateAccentPrintables(){
+      const style = document.getElementById('accentStyle').value;
+      const a = document.getElementById('accentPrintables');
+      if (!a) return;
+      if (style === 'slat'){
+        a.href = 'https://www.printables.com/model/1374169-gen2-decor-faceplate-accent-slat';
+      } else {
+        a.href = 'https://www.printables.com/model/1093933-gen2-decor-faceplates-edgelabel-series';
+      }
+      a.title = 'Open on Printables.com';
+    }
+
+    function paintSwatches(){
+      const g = sel => sel.selectedOptions[0]?.dataset.hex || '#000';
+      swFace.style.background=g(faceSel); swAccent.style.background=g(accentSel);
+      swBacker.style.background=g(backerSel); swLabel.style.background=g(labelSel); swText.style.background=g(textSel); swAccent2.style.background=g(accent2Sel);
+    }
+
+    function bboxOf(obj){
+      const box=new THREE.Box3().setFromObject(obj); const size=new THREE.Vector3(); const center=new THREE.Vector3();
+      box.getSize(size); box.getCenter(center); return {box,size,center};
+    }
+
+    function fitCameraTo(object3D){
+      if (!object3D) return;
+      const {size,center}=bboxOf(object3D);
+      const maxDim = Math.max(size.x,size.y,size.z);
+      const fov = camera.fov * (Math.PI/180);
+      const dist = (maxDim/2) / Math.tan(fov/2);
+      camera.position.copy(center).add(new THREE.Vector3(dist*0.8, dist*0.8, dist*1.2));
+      camera.lookAt(center);
+      controls.target.copy(center);
+      controls.update();
+    }
+
+    function normalizeScale(root){
+      const {size}=bboxOf(root); const maxDim=Math.max(size.x,size.y,size.z)||1e-6;
+      if (maxDim>5){ const scale=0.1/maxDim; root.scale.multiplyScalar(scale); }
+      else if (maxDim<0.02){ const scale=0.2/Math.max(maxDim,1e-6); root.scale.multiplyScalar(scale); }
+    }
+
+    function disposeHierarchy(root){
+      root.traverse(obj=>{
+        if (obj.isMesh){
+          obj.geometry?.dispose?.();
+          const mats=Array.isArray(obj.material)?obj.material:[obj.material];
+          mats.forEach(m=>{ if (!m) return; for (const k in m){ const v=m[k]; if (v && v.isTexture) v.dispose?.(); } m.dispose?.(); });
+        }
+      });
+    }
+
+    async function loadBase(){
+      try{
+        const glb = await loader.loadAsync(ASSET_PATH+'edgelabel.glb');
+        baseRoot = glb.scene;
+        normalizeScale(baseRoot);
+        baseRoot.traverse(o=>{ if (o.isMesh){ o.castShadow=false; o.receiveShadow=false; } });
+        scene.add(baseRoot);
+        accentAnchor = baseRoot.getObjectByName('AccentAnchor') || null;
+        fitCameraTo(baseRoot);
+      }catch(e){ status('Failed to load '+ASSET_PATH+'edgelabel.glb — '+e.message); }
+    }
+
+    async function loadAccent(style){
+      if (accentRoot){ scene.remove(accentRoot); disposeHierarchy(accentRoot); accentRoot=null; }
+      const file = (style === 'slat') ? 'accent_slat.glb' : 'accent_original.glb';
+      try{
+        const glb = await loader.loadAsync(ASSET_PATH+file);
+        accentRoot = glb.scene;
+        normalizeScale(accentRoot);
+        if (accentAnchor){
+          accentAnchor.updateWorldMatrix(true,true);
+          accentRoot.matrix.copy(accentAnchor.matrixWorld);
+          accentRoot.matrix.decompose(accentRoot.position, accentRoot.quaternion, accentRoot.scale);
+        }
+        accentRoot.traverse(o=>{
+          if (o.isMesh){
+            const m=o.material; if (Array.isArray(m)) return;
+            if (m && !m.isMeshStandardMaterial){ o.material = new THREE.MeshStandardMaterial({ color:m.color||0x999999, metalness:0.1, roughness:0.6, name:m.name||'Accent' }); }
+          }
+        });
+        scene.add(accentRoot);
+        applyCurrentSelection();
+      }catch(e){ status('Failed to load '+ASSET_PATH+file+' — '+e.message); }
+    }
+
+    function applyCurrentSelection(){
+      const getF = (sel)=> FILAMENTS.find(f=>f.id === sel.value);
+      const faceF=getF(faceSel), accentF=getF(accentSel), backerF=getF(backerSel), labelF=getF(labelSel), textF=getF(textSel), accent2F=getF(accent2Sel);
+
+      if (baseRoot){
+        if (faceF)   applyFilamentToThree(baseRoot,'Faceplate',faceF);
+        if (backerF) applyFilamentToThree(baseRoot,'Backer',backerF);
+        if (labelF)  applyFilamentToThree(baseRoot,'Label',labelF);
+        if (textF)   applyFilamentToThree(baseRoot,'Text',textF);
+      }
+      if (accentRoot){
+        if (accentF) applyFilamentToThree(accentRoot,'Accent',accentF);
+        const warn = (accentStyle.value === 'slat');
+        if (accent2F) applyFilamentToThree(accentRoot,'Accent_2',accent2F,{warnIfMissing:warn});
+      }
+      paintSwatches();
+      renderOnce();
+      refreshAllBuyButtons();
+    }
+
+    function applyOffsets(){
+      if (!accentRoot) return;
+      const x=parseFloat(offX.value||0)/1000, y=parseFloat(offY.value||0)/1000, z=parseFloat(offZ.value||0)/1000;
+      if (accentAnchor){
+        const basePos=new THREE.Vector3(), baseQuat=new THREE.Quaternion(), baseScale=new THREE.Vector3();
+        accentRoot.matrix.copy(accentAnchor.matrixWorld); accentRoot.matrix.decompose(basePos,baseQuat,baseScale);
+        const offset=new THREE.Vector3(x,y,z).applyQuaternion(baseQuat);
+        accentRoot.position.copy(basePos).add(offset); accentRoot.quaternion.copy(baseQuat); accentRoot.scale.copy(baseScale);
+      } else { accentRoot.position.set(x,y,z); }
+      renderOnce();
+    }
+
+    function resetAccentXform(){
+      if (!accentRoot) return;
+      if (accentAnchor){ accentAnchor.updateWorldMatrix(true,true); accentRoot.matrix.copy(accentAnchor.matrixWorld); accentRoot.matrix.decompose(accentRoot.position,accentRoot.quaternion,accentRoot.scale); }
+      else { accentRoot.position.set(0,0,0); accentRoot.rotation.set(0,0,0); accentRoot.scale.set(1,1,1); }
+      offX.value=offY.value=offZ.value=0; renderOnce();
+    }
+
+    // Wire UI
+    faceSel.addEventListener('change',()=>{applyCurrentSelection(); refreshAllBuyButtons();});
+    accentSel.addEventListener('change',()=>{applyCurrentSelection(); refreshAllBuyButtons();});
+    backerSel.addEventListener('change',()=>{applyCurrentSelection(); refreshAllBuyButtons();});
+    labelSel .addEventListener('change',()=>{applyCurrentSelection(); refreshAllBuyButtons();});
+    textSel  .addEventListener('change',()=>{applyCurrentSelection(); refreshAllBuyButtons();});
+    accent2Sel.addEventListener('change',()=>{applyCurrentSelection(); refreshAllBuyButtons();});
+    accentStyle.addEventListener('change',async()=>{ accent2Wrap.style.display=(accentStyle.value==='slat')?'block':'none'; await loadAccent(accentStyle.value); refreshAllBuyButtons(); updateAccentPrintables(); });
+    // rotate buttons exist but are hidden; keep listeners harmless
+    rot0?.addEventListener('click',()=>{ if (accentRoot){ accentRoot.rotation.z=0; renderOnce(); } });
+    rot180?.addEventListener('click',()=>{ if (accentRoot){ accentRoot.rotation.z=Math.PI; renderOnce(); } });
+    // Offset inputs removed
+resetBtn.addEventListener('click',resetAccentXform);
+    copyURL.addEventListener('click',async()=>{ try{ await navigator.clipboard.writeText(location.href); alert('Link copied!'); }catch(e){} });
+
+    let axesOn=false;
+    axesToggleBtn?.addEventListener('click',()=>{
+      axesOn=!axesOn;
+      if (axesOn){ axesHelper=new THREE.AxesHelper(0.1); scene.add(axesHelper); }
+      else { scene.remove(axesHelper); axesHelper=null; }
+      renderOnce();
+    });
+    frameBaseBtn?.addEventListener('click',()=>{ if (baseRoot) fitCameraTo(baseRoot); });
+    frameAllBtn?.addEventListener('click',()=>{
+      const group=new THREE.Group(); if (baseRoot) group.add(baseRoot.clone()); if (accentRoot) group.add(accentRoot.clone());
+      fitCameraTo(group);
+    });
+
+    // ResizeObserver sizing (fixes stretch)
+    function sizeFromCanvas(){
+      const rect = canvas.getBoundingClientRect();
+      const w = Math.max(1, Math.floor(rect.width));
+      const h = Math.max(1, Math.floor(rect.height));
+      renderer.setSize(w, h, false);
+      camera.aspect = w / h;
+      camera.updateProjectionMatrix();
+      renderOnce();
+    }
+    const ro = new ResizeObserver(sizeFromCanvas);
+    ro.observe(canvas);
+    window.addEventListener('resize', sizeFromCanvas);
+
+    function renderOnce(){ controls.update(); renderer.render(scene,camera); }
+    (function animate(){ requestAnimationFrame(animate); renderOnce(); })();
+
+    // Init
+    (async function init(){
+      await tryLoadFilamentsJSON();
+      populateSelectors();
+      buildPresetChips();
+      loadPresets();
+      if (FILAMENTS.length){
+        faceSel.value=FILAMENTS[0].id; accentSel.value=FILAMENTS[2]?.id||FILAMENTS[0].id; backerSel.value=FILAMENTS[1]?.id||FILAMENTS[0].id;
+        labelSel.value=FILAMENTS[1]?.id||FILAMENTS[0].id; textSel.value=FILAMENTS[1]?.id||FILAMENTS[0].id; accent2Sel.value=FILAMENTS[3]?.id||FILAMENTS[0].id;
+      }
+      await loadBase();
+      await loadAccent(accentStyle.value);
+      applyCurrentSelection();
+      sizeFromCanvas();
+      if (location.protocol==='file:'){ status('Heads‑up: file:// mode. If GLBs fail to show, serve via a local web server.'); }
+    })();
+  </script>
+</body>
+</html>

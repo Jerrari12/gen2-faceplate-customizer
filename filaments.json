@@ -1,0 +1,74 @@
+[
+  {
+    "name": "White",
+    "brand": "Polymaker",
+    "id": "polymaker-white",
+    "hex": "#ffffff",
+    "roughness": 0.45,
+    "metallic": 0.05,
+    "link": "https://us.polymaker.com/products/polylite-pla?variant=43818025877561"
+  },
+  {
+    "name": "Orange",
+    "brand": "Prusament",
+    "id": "prusament-orange",
+    "hex": "#EA5E1A",
+    "roughness": 0.45,
+    "metallic": 0.05,
+    "link": "https://www.prusa3d.com/product/prusament-pla-prusa-orange-1kg/"
+  },
+  {
+    "name": "PLA Jet Black",
+    "brand": "Prusament",
+    "id": "prusa-jet-black-pla",
+    "hex": "#111111",
+    "roughness": 0.55,
+    "metallic": 0.0,
+    "link": "https://shop.prusa3d.com/"
+  },
+  {
+    "name": "PLA Pro2 Slate",
+    "brand": "Polymaker",
+    "id": "polymaker-pla-pro2-slate",
+    "hex": "#7f8893",
+    "roughness": 0.35,
+    "metallic": 0.0,
+    "link": "https://www.matterhackers.com/"
+  },
+  {
+    "name": "PETG Black",
+    "brand": "Polymaker",
+    "id": "polymaker-petg-black",
+    "hex": "#0b0b0c",
+    "roughness": 0.6,
+    "metallic": 0.0,
+    "link": "https://www.matterhackers.com/"
+  },
+  {
+    "name": "Galaxy Black (Sparkle)",
+    "brand": "Prusament",
+    "id": "prusament-galaxy-black",
+    "hex": "#222222",
+    "roughness": 0.45,
+    "metallic": 0.05,
+    "link": "https://shop.prusa3d.com/"
+  },
+  {
+    "name": "Silk Silver PLA",
+    "brand": "Prusament",
+    "id": "prusament-silver-silk",
+    "hex": "#c3c6cb",
+    "roughness": 0.18,
+    "metallic": 0.35,
+    "link": "https://shop.prusa3d.com/"
+  },
+  {
+    "name": "Silk Gold (Generic)",
+    "brand": "Generic",
+    "id": "elegoo-satin-gold",
+    "hex": "#d1b35a",
+    "roughness": 0.18,
+    "metallic": 0.35,
+    "link": "https://www.amazon.com/"
+  }
+]

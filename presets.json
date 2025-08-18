@@ -1,0 +1,11 @@
+[
+  {
+    "id": "mono",
+    "name": "Original",
+    "face": "prusament-orange",
+    "accent": "prusament-galaxy-black",
+    "backer": "black",
+    "label": "polymaker-white",
+    "text": "black"
+  }
+]
