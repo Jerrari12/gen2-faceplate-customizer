@@ -1,74 +1,322 @@
-[
-  {
-    "name": "White",
-    "brand": "Polymaker",
-    "id": "polymaker-white",
-    "hex": "#ffffff",
-    "roughness": 0.45,
-    "metallic": 0.05,
-    "link": "https://us.polymaker.com/products/polylite-pla?variant=43818025877561"
-  },
-  {
-    "name": "Orange",
-    "brand": "Prusament",
-    "id": "prusament-orange",
-    "hex": "#EA5E1A",
-    "roughness": 0.45,
-    "metallic": 0.05,
-    "link": "https://www.prusa3d.com/product/prusament-pla-prusa-orange-1kg/"
-  },
-  {
-    "name": "PLA Jet Black",
-    "brand": "Prusament",
-    "id": "prusa-jet-black-pla",
-    "hex": "#111111",
-    "roughness": 0.55,
-    "metallic": 0.0,
-    "link": "https://shop.prusa3d.com/"
-  },
-  {
-    "name": "PLA Pro2 Slate",
-    "brand": "Polymaker",
-    "id": "polymaker-pla-pro2-slate",
-    "hex": "#7f8893",
-    "roughness": 0.35,
-    "metallic": 0.0,
-    "link": "https://www.matterhackers.com/"
-  },
-  {
-    "name": "PETG Black",
-    "brand": "Polymaker",
-    "id": "polymaker-petg-black",
-    "hex": "#0b0b0c",
-    "roughness": 0.6,
-    "metallic": 0.0,
-    "link": "https://www.matterhackers.com/"
-  },
-  {
-    "name": "Galaxy Black (Sparkle)",
-    "brand": "Prusament",
-    "id": "prusament-galaxy-black",
-    "hex": "#222222",
-    "roughness": 0.45,
-    "metallic": 0.05,
-    "link": "https://shop.prusa3d.com/"
-  },
-  {
-    "name": "Silk Silver PLA",
-    "brand": "Prusament",
-    "id": "prusament-silver-silk",
-    "hex": "#c3c6cb",
-    "roughness": 0.18,
-    "metallic": 0.35,
-    "link": "https://shop.prusa3d.com/"
-  },
-  {
-    "name": "Silk Gold (Generic)",
-    "brand": "Generic",
-    "id": "elegoo-satin-gold",
-    "hex": "#d1b35a",
-    "roughness": 0.18,
-    "metallic": 0.35,
-    "link": "https://www.amazon.com/"
-  }
+﻿[
+    {
+        "id":  "elegoo-satin-gold",
+        "brand":  "Generic",
+        "name":  "Silk Gold (Generic)",
+        "finish":  "Silk",
+        "hex":  "#d1b35a",
+        "metallic":  0.35,
+        "roughness":  0.18,
+        "link":  "https://www.amazon.com/"
+    },
+    {
+        "id":  "polymaker-creatrix-silk-red",
+        "brand":  "Polymaker",
+        "name":  "Creatrix Silk Red",
+        "finish":  "Silk",
+        "hex":  "#CB0100",
+        "metallic":  0.35,
+        "roughness":  0.18,
+        "link":  "https://us.polymaker.com/products/panchroma-silk?variant=43637561262137"
+    },
+    {
+        "id":  "polymaker-petg-black",
+        "brand":  "Polymaker",
+        "name":  "PETG Black",
+        "finish":  "Regular",
+        "hex":  "#0b0b0c",
+        "metallic":  0,
+        "roughness":  0.6,
+        "link":  "https://www.matterhackers.com/"
+    },
+    {
+        "id":  "polymaker-pla-pro2-slate",
+        "brand":  "Polymaker",
+        "name":  "PLA Pro2 Slate",
+        "finish":  "Regular",
+        "hex":  "#7f8893",
+        "metallic":  0,
+        "roughness":  0.35,
+        "link":  "https://www.matterhackers.com/"
+    },
+    {
+        "id":  "polymaker-silk-black",
+        "brand":  "Polymaker",
+        "name":  "Silk Black",
+        "finish":  "Silk",
+        "hex":  "#000203",
+        "metallic":  0.35,
+        "roughness":  0.18,
+        "link":  "https://us.polymaker.com/products/panchroma-silk?variant=43637561262137"
+    },
+    {
+        "id":  "polymaker-silk-blue",
+        "brand":  "Polymaker",
+        "name":  "Silk Blue",
+        "finish":  "Silk",
+        "hex":  "#0151BA",
+        "metallic":  0.35,
+        "roughness":  0.18,
+        "link":  "https://us.polymaker.com/products/panchroma-silk?variant=43637561262137"
+    },
+    {
+        "id":  "polymaker-silk-brass",
+        "brand":  "Polymaker",
+        "name":  "Silk Brass",
+        "finish":  "Silk",
+        "hex":  "#B5A642",
+        "metallic":  0.35,
+        "roughness":  0.18,
+        "link":  "https://us.polymaker.com/products/panchroma-silk?variant=43637561262137"
+    },
+    {
+        "id":  "polymaker-silk-bronze",
+        "brand":  "Polymaker",
+        "name":  "Silk Bronze",
+        "finish":  "Silk",
+        "hex":  "#641501",
+        "metallic":  0.35,
+        "roughness":  0.18,
+        "link":  "https://us.polymaker.com/products/panchroma-silk?variant=43637561262137"
+    },
+    {
+        "id":  "polymaker-silk-chrome",
+        "brand":  "Polymaker",
+        "name":  "Silk Chrome",
+        "finish":  "Silk",
+        "hex":  "#384657",
+        "metallic":  0.35,
+        "roughness":  0.18,
+        "link":  "https://us.polymaker.com/products/panchroma-silk?variant=43637561262137"
+    },
+    {
+        "id":  "polymaker-silk-dark-blue",
+        "brand":  "Polymaker",
+        "name":  "Silk Dark Blue",
+        "finish":  "Silk",
+        "hex":  "#0A2A6B",
+        "metallic":  0.35,
+        "roughness":  0.18,
+        "link":  "https://us.polymaker.com/products/panchroma-silk?variant=43637561262137"
+    },
+    {
+        "id":  "polymaker-silk-gold",
+        "brand":  "Polymaker",
+        "name":  "Silk Gold",
+        "finish":  "Silk",
+        "hex":  "#B56600",
+        "metallic":  0.35,
+        "roughness":  0.18,
+        "link":  "https://us.polymaker.com/products/panchroma-silk?variant=43637561262137"
+    },
+    {
+        "id":  "polymaker-silk-green",
+        "brand":  "Polymaker",
+        "name":  "Silk Green",
+        "finish":  "Silk",
+        "hex":  "#008C63",
+        "metallic":  0.35,
+        "roughness":  0.18,
+        "link":  "https://us.polymaker.com/products/panchroma-silk?variant=43637561262137"
+    },
+    {
+        "id":  "polymaker-silk-gunmetal-grey",
+        "brand":  "Polymaker",
+        "name":  "Silk Gunmetal Grey",
+        "finish":  "Silk",
+        "hex":  "#2E3A46",
+        "metallic":  0.35,
+        "roughness":  0.18,
+        "link":  "https://us.polymaker.com/products/panchroma-silk?variant=43637561262137"
+    },
+    {
+        "id":  "polymaker-silk-light-blue",
+        "brand":  "Polymaker",
+        "name":  "Silk Light Blue",
+        "finish":  "Silk",
+        "hex":  "#00A0B7",
+        "metallic":  0.35,
+        "roughness":  0.18,
+        "link":  "https://us.polymaker.com/products/panchroma-silk?variant=43637561262137"
+    },
+    {
+        "id":  "polymaker-silk-lime",
+        "brand":  "Polymaker",
+        "name":  "Silk Lime",
+        "finish":  "Silk",
+        "hex":  "#91C500",
+        "metallic":  0.35,
+        "roughness":  0.18,
+        "link":  "https://us.polymaker.com/products/panchroma-silk?variant=43637561262137"
+    },
+    {
+        "id":  "polymaker-silk-magenta",
+        "brand":  "Polymaker",
+        "name":  "Silk Magenta",
+        "finish":  "Silk",
+        "hex":  "#990050",
+        "metallic":  0.35,
+        "roughness":  0.18,
+        "link":  "https://us.polymaker.com/products/panchroma-silk?variant=43637561262137"
+    },
+    {
+        "id":  "polymaker-silk-orange",
+        "brand":  "Polymaker",
+        "name":  "Silk Orange",
+        "finish":  "Silk",
+        "hex":  "#F14700",
+        "metallic":  0.35,
+        "roughness":  0.18,
+        "link":  "https://us.polymaker.com/products/panchroma-silk?variant=43637561262137"
+    },
+    {
+        "id":  "polymaker-silk-peridot-green",
+        "brand":  "Polymaker",
+        "name":  "Silk Peridot Green",
+        "finish":  "Silk",
+        "hex":  "#BFD641",
+        "metallic":  0.35,
+        "roughness":  0.18,
+        "link":  "https://us.polymaker.com/products/panchroma-silk?variant=43637561262137"
+    },
+    {
+        "id":  "polymaker-silk-periwinkle",
+        "brand":  "Polymaker",
+        "name":  "Silk Periwinkle",
+        "finish":  "Silk",
+        "hex":  "#8FA7FF",
+        "metallic":  0.35,
+        "roughness":  0.18,
+        "link":  "https://us.polymaker.com/products/panchroma-silk?variant=43637561262137"
+    },
+    {
+        "id":  "polymaker-silk-polymaker-teal",
+        "brand":  "Polymaker",
+        "name":  "Silk Polymaker Teal",
+        "finish":  "Silk",
+        "hex":  "#009FA8",
+        "metallic":  0.35,
+        "roughness":  0.18,
+        "link":  "https://us.polymaker.com/products/panchroma-silk?variant=43637561262137"
+    },
+    {
+        "id":  "polymaker-silk-purple",
+        "brand":  "Polymaker",
+        "name":  "Silk Purple",
+        "finish":  "Silk",
+        "hex":  "#150074",
+        "metallic":  0.35,
+        "roughness":  0.18,
+        "link":  "https://us.polymaker.com/products/panchroma-silk?variant=43637561262137"
+    },
+    {
+        "id":  "polymaker-silk-quartz-pink",
+        "brand":  "Polymaker",
+        "name":  "Silk Quartz Pink",
+        "finish":  "Silk",
+        "hex":  "#DC857A",
+        "metallic":  0.35,
+        "roughness":  0.18,
+        "link":  "https://us.polymaker.com/products/panchroma-silk?variant=43637561262137"
+    },
+    {
+        "id":  "polymaker-silk-rose",
+        "brand":  "Polymaker",
+        "name":  "Silk Rose",
+        "finish":  "Silk",
+        "hex":  "#C5000A",
+        "metallic":  0.35,
+        "roughness":  0.18,
+        "link":  "https://us.polymaker.com/products/panchroma-silk?variant=43637561262137"
+    },
+    {
+        "id":  "polymaker-silk-rose-gold",
+        "brand":  "Polymaker",
+        "name":  "Silk Rose Gold",
+        "finish":  "Silk",
+        "hex":  "#A56F6B",
+        "metallic":  0.35,
+        "roughness":  0.18,
+        "link":  "https://us.polymaker.com/products/panchroma-silk?variant=43637561262137"
+    },
+    {
+        "id":  "polymaker-silk-silver",
+        "brand":  "Polymaker",
+        "name":  "Silk Silver",
+        "finish":  "Silk",
+        "hex":  "#818C9F",
+        "metallic":  0.35,
+        "roughness":  0.18,
+        "link":  "https://us.polymaker.com/products/panchroma-silk?variant=43637561262137"
+    },
+    {
+        "id":  "polymaker-silk-white",
+        "brand":  "Polymaker",
+        "name":  "Silk White",
+        "finish":  "Silk",
+        "hex":  "#DBD1C7",
+        "metallic":  0.35,
+        "roughness":  0.18,
+        "link":  "https://us.polymaker.com/products/panchroma-silk?variant=43637561262137"
+    },
+    {
+        "id":  "polymaker-silk-yellow",
+        "brand":  "Polymaker",
+        "name":  "Silk Yellow",
+        "finish":  "Silk",
+        "hex":  "#E9C200",
+        "metallic":  0.35,
+        "roughness":  0.18,
+        "link":  "https://us.polymaker.com/products/panchroma-silk?variant=43637561262137"
+    },
+    {
+        "id":  "polymaker-white",
+        "brand":  "Polymaker",
+        "name":  "White",
+        "finish":  "Regular",
+        "hex":  "#ffffff",
+        "metallic":  0.05,
+        "roughness":  0.45,
+        "link":  "https://us.polymaker.com/products/polylite-pla?variant=43818025877561"
+    },
+    {
+        "id":  "prusament-galaxy-black",
+        "brand":  "Prusament",
+        "name":  "Galaxy Black (Sparkle)",
+        "finish":  "Regular",
+        "hex":  "#222222",
+        "metallic":  0.05,
+        "roughness":  0.45,
+        "link":  "https://shop.prusa3d.com/"
+    },
+    {
+        "id":  "prusament-orange",
+        "brand":  "Prusament",
+        "name":  "Orange",
+        "finish":  "Regular",
+        "hex":  "#EA5E1A",
+        "metallic":  0.05,
+        "roughness":  0.45,
+        "link":  "https://www.prusa3d.com/product/prusament-pla-prusa-orange-1kg/"
+    },
+    {
+        "id":  "prusa-jet-black-pla",
+        "brand":  "Prusament",
+        "name":  "PLA Jet Black",
+        "finish":  "Regular",
+        "hex":  "#111111",
+        "metallic":  0,
+        "roughness":  0.55,
+        "link":  "https://shop.prusa3d.com/"
+    },
+    {
+        "id":  "prusament-silver-silk",
+        "brand":  "Prusament",
+        "name":  "Silk Silver PLA",
+        "finish":  "Silk",
+        "hex":  "#c3c6cb",
+        "metallic":  0.35,
+        "roughness":  0.18,
+        "link":  "https://shop.prusa3d.com/"
+    }
 ]

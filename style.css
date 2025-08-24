@@ -1,0 +1,315 @@
+:root {
+  --bg:#0f1115; --panel:#171a21; --muted:#9aa4b2; --text:#e6e9ef; --accent:#62a5ff; --radius:16px;
+}
+
+html, body { height:100%; margin:0; }
+body {
+  font-family: ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Inter,Arial;
+  background: var(--bg);
+  color: var(--text);
+}
+
+/* Your visual styles (safe to keep) */
+.panel{
+  background: linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.01));
+  border:1px solid rgba(255,255,255,.08);
+  backdrop-filter: blur(8px);
+  border-radius: 16px;
+  padding: 14px;
+  display:flex; flex-direction:column; gap:10px;
+}
+.title{ font-size:18px; font-weight:700; }
+.muted{ color:var(--muted); font-size:12px; }
+.row{ display:flex; gap:10px; align-items:center; }
+.grid2{ display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+.field{ display:flex; flex-direction:column; gap:6px; margin:6px 0; }
+label{ font-size:12px; color:var(--muted); }
+select,button,input[type=number]{
+  height:36px; background:#0d1016; color:var(--text);
+  border:1px solid rgba(255,255,255,.12); border-radius:10px; padding:0 10px; outline:none;
+}
+button{ cursor:pointer; transition:transform .05s ease; }
+button.primary{ background:linear-gradient(180deg,#2e6bea,#1f54be); border:1px solid #2d64da; }
+.chips{ display:flex; flex-wrap:wrap; gap:8px; }
+.chip{ padding:6px 10px; border-radius:999px; border:1px solid rgba(255,255,255,.12); background:#0d1016; cursor:pointer; font-size:12px; }
+.chip:hover{ border-color:rgba(255,255,255,.24); }
+.small{ font-size:11px; color:var(--muted); }
+.hr{ height:1px; background:rgba(255,255,255,.06); margin:8px 0; border:0; }
+.swatch{ display:inline-block; width:16px; height:16px; margin-right:8px; border-radius:4px; border:1px solid rgba(255,255,255,.25); box-shadow: inset 0 0 0 1px rgba(0,0,0,.15); vertical-align:middle; flex:0 0 16px; }
+.control-row{ display:flex; align-items:center; gap:.5rem; }
+.mini{ height:28px; padding:0 8px; font-size:12px; opacity:.9; }
+.mini:disabled{ opacity:.5; cursor:not-allowed; }
+.status{ position:fixed; left:12px; bottom:12px; background:#1b2330; border:1px solid rgba(255,255,255,.12); border-radius:10px; padding:8px 10px; font-size:12px; max-width:min(720px,90vw); white-space:pre-wrap; }
+.status.ok{ display:none; }
+
+/* Filament picker */
+.filament-picker{
+  position:absolute; inset:auto auto auto auto; z-index:9999;
+  width:320px; max-height:360px; overflow:hidden;
+  background:#0d1016; border:1px solid rgba(255,255,255,.12);
+  border-radius:10px; box-shadow:0 10px 32px rgba(0,0,0,.45);
+  display:grid; grid-template-rows:auto 1fr;
+}
+.fp-head{ padding:8px; border-bottom:1px solid rgba(255,255,255,.08); display:flex; gap:8px; align-items:center; }
+.fp-head input{ flex:1; height:30px; background:#0b0e14; color:#e6e9ef; border:1px solid rgba(255,255,255,.12); border-radius:8px; padding:0 8px; }
+.fp-body{ overflow:auto; padding:8px; }
+.fp-brand{ border:1px solid rgba(255,255,255,.06); border-radius:8px; margin-bottom:8px; }
+.fp-bhdr{ display:flex; align-items:center; gap:6px; cursor:pointer; padding:8px; user-select:none; }
+.fp-bhdr .caret{ transition: transform .15s ease; }
+.fp-bhdr.collapsed .caret{ transform: rotate(-90deg); }
+.fp-grid{ display:grid; grid-template-columns: repeat(8, 20px); gap:8px; padding:8px; border-top:1px solid rgba(255,255,255,.06); }
+.fp-swatch{ width:20px; height:20px; border-radius:4px; border:1px solid rgba(255,255,255,.25); box-shadow: inset 0 0 0 1px rgba(0,0,0,.18); cursor:pointer; }
+.fp-swatch[aria-selected="true"]{ outline:2px solid var(--accent); outline-offset:2px; }
+.fp-meta{ margin-left:auto; color:#9aa4b2; font-size:11px; }
+.picker-backdrop{ position:fixed; inset:0; z-index:9998; background:transparent; }
+
+
+
+:root{
+  --gap: 12px;
+  --panel-w: 320px;
+  --tap: 44px;
+  --radius: 12px;
+}
+
+*{box-sizing:border-box}
+body,html{height:100%;margin:0}
+body{font-size:clamp(14px, 1.6vw, 16px); line-height:1.3;}
+
+.app{
+  display:grid;
+  grid-template-columns: var(--panel-w) 1fr;
+  grid-template-rows: 100dvh; /* use dynamic vh so mobile toolbars don’t break layout */
+  gap: var(--gap);
+  padding: var(--gap);
+}
+
+/* Controls */
+.panel{
+  display:flex; flex-direction:column; gap:var(--gap);
+  max-height:100%; overflow:auto;
+}
+
+.panel .field select, .panel .field button{
+  min-height:var(--tap);
+  border-radius:var(--radius);
+  width:100%;
+}
+
+/* Viewer */
+.viewer-wrap{
+  position:relative;
+  border-radius:var(--radius);
+  overflow:hidden;
+}
+#viewer{ width:100%; height:100%; display:block }
+
+/* Mobile: stack + bottom sheet feel */
+@media (max-width: 900px){
+  .app{
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr auto;
+  }
+  .viewer-wrap{ grid-row:1 }
+  .panel{
+    grid-row:2;
+    position:sticky; bottom:0;
+    padding: var(--gap);
+    background: color-mix(in oklab, Canvas 85%, CanvasText 5%);
+    border-radius: var(--radius);
+    box-shadow: 0 -6px 24px rgba(0,0,0,.12);
+  }
+  /* Turn two-column control rows into one column on phones */
+  .grid2{ display:grid; grid-template-columns: 1fr; gap:var(--gap); }
+}
+
+/* Big fingers, safe areas */
+@supports (padding: env(safe-area-inset-bottom)){
+  .panel{ padding-bottom: calc(var(--gap) + env(safe-area-inset-bottom)); }
+}
+
+
+/* 1) Make the main app fill the page (no stray max-width containers) */
+.app{
+  width:100%;
+  max-width:none;
+  margin:0;                 /* in case a global .app has margin:auto */
+  grid-template-rows: minmax(0, 100dvh);
+}
+
+/* 2) Ensure the viewer column can actually grow (no overflow clipping) */
+.viewer-wrap{
+  min-block-size: 320px;    /* gives the canvas some height even if empty */
+}
+
+/* 3) Make the canvas stretch properly */
+#viewer{
+  inline-size:100%;
+  block-size:100%;
+}
+
+/* If your site has a global page wrapper restricting width, unlock it here */
+.page, .container, .wrap {
+  max-width:none;
+}
+
+
+/* Neutralize legacy centering */
+html, body { height: 100%; }
+body { display: block; }
+
+/* Use your existing .wrap as the main app grid */
+.wrap{
+  display: grid !important;
+  grid-template-columns: var(--panel-w, 320px) 1fr !important;
+  gap: 12px;
+  width: 100% !important;
+  max-width: none !important;
+  margin: 0;
+  padding: 12px;
+}
+
+/* Make viewer area actually fill */
+#viewer, #c { inline-size:100%; block-size:100%; display:block; }
+.viewer-wrap { min-block-size: 320px; }
+
+/* Mobile stack */
+@media (max-width: 900px){
+  .wrap{ grid-template-columns: 1fr !important; grid-template-rows: 1fr auto; }
+  .panel{ grid-row: 2; position: sticky; bottom: 0; }
+}
+
+
+html, body { height: 100%; margin: 0; }
+body { display: block; } /* neutralize legacy centering */
+
+/* App grid */
+.app{
+  display: grid;
+  grid-template-columns: var(--panel-w, 320px) 1fr;
+  grid-template-rows: 100dvh;   /* gives the viewer column its height */
+  gap: 12px;
+  padding: 12px;
+  width: 100%;
+  max-width: none;
+}
+
+/* Viewer column and canvas fill */
+.viewer-wrap{
+  position: relative;
+  min-height: 0;
+  height: 100%;
+  border-radius: 12px;
+  overflow: hidden;
+}
+#viewer{
+  width: 100%;
+  height: 100%;
+  display: block;
+  touch-action: none;
+}
+
+/* Mobile bottom sheet for controls */
+@media (max-width: 900px){
+  .app{
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr auto;
+  }
+  .viewer-wrap{ grid-row: 1; }
+  .panel{
+    grid-row: 2;
+    position: sticky; bottom: 0;
+    padding-bottom: calc(12px + env(safe-area-inset-bottom));
+  }
+}
+
+
+/* Layout */
+.app{
+  display:grid;
+  grid-template-columns: var(--panel-w,320px) 1fr;
+  grid-template-rows: 100dvh;
+  gap:12px; padding:12px; width:100%; max-width:none;
+}
+.viewer-wrap{ position:relative; min-height:0; height:100%; border-radius:12px; overflow:hidden; }
+#viewer{ width:100%; height:100%; display:block; touch-action:none; }
+
+@media (max-width:900px){
+  .app{ grid-template-columns:1fr; grid-template-rows:1fr auto; }
+  .viewer-wrap{ grid-row:1; }
+  .panel{ grid-row:2; position:sticky; bottom:0; padding-bottom:calc(12px + env(safe-area-inset-bottom)); }
+}
+
+
+/* --- Mobile bottom-sheet & stacking fixes --- */
+@media (max-width: 900px){
+  /* Give the viewer guaranteed height; panel sits at the bottom */
+  .app{
+    grid-template-columns: 1fr;
+    grid-template-rows: minmax(52dvh, 1fr) auto; /* viewer >= ~half screen */
+    align-content: stretch;
+  }
+  .viewer-wrap{
+    grid-row: 1;
+    z-index: 0;                  /* under the panel */
+    min-height: 0;               /* allow it to grow/shrink */
+    height: 100%;
+  }
+  .panel{
+    grid-row: 2;
+    position: sticky; bottom: 0;
+    z-index: 1;                  /* above the canvas */
+    max-height: 46dvh;           /* cap height so viewer stays visible */
+    overflow: auto;              /* scroll inside the sheet */
+    padding: 12px;
+    background: var(--panel);    /* avoid system 'Canvas' color flip */
+    border: 1px solid rgba(255,255,255,.08);
+    border-top-left-radius: 16px;
+    border-top-right-radius: 16px;
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+    box-shadow: 0 -12px 40px rgba(0,0,0,.35);
+  }
+  @supports (padding: env(safe-area-inset-bottom)){
+    .panel{ padding-bottom: calc(12px + env(safe-area-inset-bottom)); }
+  }
+}
+
+/* Make absolutely sure the canvas never overflows the panel area */
+.viewer-wrap{ overflow: hidden; }
+#viewer{ width:100%; height:100%; display:block; touch-action:none; }
+
+
+@media (max-width:900px){
+  .panel::before{
+    content:"";
+    display:block;
+    width:42px; height:4px; border-radius:999px;
+    background: rgba(255,255,255,.18);
+    margin: 6px auto 10px;
+  }
+}
+
+
+/* keep in DOM for a11y + change events, but hide visually */
+.visually-hidden {
+  position: absolute !important;
+  width: 1px; height: 1px; padding: 0; margin: -1px;
+  overflow: hidden; clip: rect(0 0 0 0);
+  white-space: nowrap; border: 0;
+}
+/* tidy spacing when the select is hidden */
+.control-row .visually-hidden + [data-picker-for] { margin-left: 0; }
+
+
+/* sub-group header (finish) */
+.fp-subhdr{
+  display:flex; align-items:center; gap:6px;
+  padding:6px 8px; margin-top:4px;
+  font-size:12px; color:#9aa4b2;
+  border-top:1px solid rgba(255,255,255,.06);
+  cursor:pointer; user-select:none;
+}
+.fp-subhdr .caret{ transition: transform .15s ease; }
+.fp-subhdr.collapsed .caret{ transform: rotate(-90deg); }
+
