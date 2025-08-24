@@ -117,14 +117,21 @@ for (const [brand, items] of grouped){
       b.title = `${f.brand||'Other'} — ${f.name}${f.hex?` (${f.hex})`:''} • ${finishName}`;
       if (String(f.id) === current) b.setAttribute('aria-selected','true');
       b.addEventListener('click', ()=>{
-        selectEl.value = f.id;
-        // update selected/outline
+        // Make sure the select actually has this option and a nice label
+        ensureSelectHasOption(selectEl, f);
+
+       // Select it (this makes the CLOSED dropdown show "Brand – Name (Finish)")
+        selectEl.value = String(f.id ?? f.slug ?? f.name);
+
+        // Update selection outline in the grid
         grid.querySelector('[aria-selected="true"]')?.removeAttribute('aria-selected');
         b.setAttribute('aria-selected','true');
-        // fire your existing listeners and fallbacks
+
+        // Fire your existing listeners and helpers
         selectEl.dispatchEvent(new Event('change', { bubbles:true }));
         window.applyCurrentSelection?.();
         window.refreshAllBuyButtons?.();
+
         closeFilamentPicker();
       });
       grid.appendChild(b);
@@ -161,6 +168,34 @@ for (const [brand, items] of grouped){
 
   return blocks;
 }
+
+
+function optionLabel(f) {
+  const brand  = f.brand ? `${f.brand} – ` : '';
+  const finish = f.finish ? ` (${f.finish})` : '';
+  return `${brand}${f.name}${finish}`;
+}
+
+function ensureSelectHasOption(selectEl, f) {
+  const val = String(f.id ?? f.slug ?? f.name);
+  // try to find existing option
+  let opt = Array.from(selectEl.options).find(o => o.value === val);
+  // create if missing
+  if (!opt) {
+    opt = document.createElement('option');
+    opt.value = val;
+    selectEl.appendChild(opt);
+  }
+  // set the visible label and useful metadata
+  opt.textContent   = optionLabel(f);
+  opt.dataset.hex   = f.hex || '#cccccc';
+  opt.dataset.brand = f.brand || '';
+  opt.dataset.finish= f.finish || '';
+  opt.dataset.url   = f.link || f.url || '';
+  return opt;
+}
+
+
 
 function openFilamentPicker(selectEl, anchorBtn){
   closeFilamentPicker();
@@ -205,15 +240,48 @@ function closeFilamentPicker(){
 function attachFilamentPicker(selectId){
   const sel = document.getElementById(selectId);
   if (!sel) return;
+
+  // Hide native select (we still use its value + change events)
+  sel.classList.add('visually-hidden');
+
+  // If an old display button exists, remove it (we'll use one control only)
+  if (sel.nextElementSibling && sel.nextElementSibling.classList?.contains('select-display')) {
+    sel.nextElementSibling.remove();
+  }
+
+  // Use (or create) the button with data-picker-for as the single trigger
   let btn = document.querySelector(`[data-picker-for="${selectId}"]`);
   if (!btn){
     btn = document.createElement('button');
-    btn.className = 'mini'; btn.textContent = '▾';
-    btn.title = 'Pick by brand & color';
+    btn.setAttribute('data-picker-for', selectId);
     sel.insertAdjacentElement('afterend', btn);
   }
-  btn.addEventListener('click', (e)=>{ e.preventDefault(); e.stopPropagation(); openFilamentPicker(sel, btn); });
+
+  // Upgrade it to a full-width trigger that shows the text
+  btn.type = 'button';
+  btn.classList.remove('mini');          // it used to be the small caret button
+  btn.classList.add('select-trigger');   // now becomes the wide control
+
+  // Keep its label in sync with the selected option
+  function syncTrigger(){
+    const txt = sel.selectedOptions?.[0]?.textContent || 'Select filament…';
+    btn.textContent = txt;               // caret is drawn via ::after in CSS
+  }
+  syncTrigger();
+  sel.addEventListener('change', syncTrigger);
+
+  // Open the picker from the trigger
+  if (btn.dataset.wired !== '1') {
+    btn.dataset.wired = '1';
+    btn.addEventListener('click', (e)=>{
+      e.preventDefault(); e.stopPropagation();
+      openFilamentPicker(sel, btn);
+    });
+  }
 }
+
+
+
 
 // Expose if other scripts call them
 window.openFilamentPicker = openFilamentPicker;

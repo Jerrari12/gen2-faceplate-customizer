@@ -31,49 +31,52 @@
       </div>
       <hr class="hr"/>
 
-      <!-- Base model colors -->
-      <div>
-        <div class="field">
-          <label>Faceplate filament</label>
-          <div class="control-row">
-            <span id="swatchFace" class="swatch"></span>
-            <select id="faceSelect"></select>
-            <button class="mini" data-picker-for="faceSelect" title="Pick by brand & color">▾</button>
-            <button id="buyFace" class="mini">Buy</button>
-          </div>
-        </div>
-        <div class="field">
-          <label>Backer color</label>
-          <div class="control-row">
-            <span id="swatchBacker" class="swatch"></span>
-            <select id="backerSelect"></select>
-            <button id="buyBacker" class="mini">Buy</button>
-          </div>
-        </div>
-      </div>
 
-      <div class="grid2">
-        <div class="field">
-          <label>Label color</label>
-          <div class="control-row">
-            <span id="swatchLabel" class="swatch"></span>
+
+<!-- Faceplate -->
+<div class="field">
+  <label>Faceplate filament</label>
+  <div class="control-row">
+    <span id="swatchFace" class="swatch"></span>
+    <select id="faceSelect"></select>
+    <button class="mini" data-picker-for="faceSelect" title="Pick by brand & color">▾</button>
+    <button id="buyFace" class="mini">🛒</button>
+  </div>
+</div> <!-- ← this closing div was missing -->
+<!-- Backer -->
+<div class="field">
+  <label>Backer color</label>
+  <div class="control-row">
+    <span id="swatchBacker" class="swatch"></span>
+    <select id="backerSelect"></select>
+    <button class="mini" data-picker-for="backerSelect" title="Pick by brand & color">▾</button>
+    <button id="buyBacker" class="mini">🛒</button>
+  </div>
+</div>
+      <!-- Label -->
+       <div class="field">
+         <label>Label color</label>
+         <div class="control-row">
+           <span id="swatchLabel" class="swatch"></span>
             <select id="labelSelect"></select>
-            <button id="buyLabel" class="mini">Buy</button>
+           <button class="mini" data-picker-for="labelSelect" title="Pick by brand & color">▾</button>
+            <button id="buyLabel" class="mini">🛒</button>
           </div>
         </div>
-        <div></div>
-      </div>
-
-      <hr class="hr"/>
-
-      <div class="field">
-        <label>Text color</label>
-        <div class="control-row">
-          <span id="swatchText" class="swatch"></span>
-          <select id="textSelect"></select>
-          <button id="buyText" class="mini">Buy</button>
+      <!-- Text -->
+       <div class="field">
+         <label>Text color</label>
+         <div class="control-row">
+           <span id="swatchText" class="swatch"></span>
+            <select id="textSelect"></select>
+           <button class="mini" data-picker-for="textSelect" title="Pick by brand & color">▾</button>
+            <button id="buytext" class="mini">🛒</button>
+          </div>
         </div>
-      </div>
+
+
+
+
 
       <hr class="hr"/>
 
@@ -81,8 +84,8 @@
       <div class="field">
         <label>Accent style</label>
         <select id="accentStyle">
-          <option value="original">accent_original (1 color)</option>
-          <option value="slat">accent_slat (2 colors)</option>
+          <option value="original">Original</option>
+          <option value="slat">Slat</option>
         </select>
       </div>
 
@@ -199,24 +202,34 @@
   }
 
   // -------- Build all <select>s from FILAMENTS (module scope; single definition) --------
-  function populateSelectors(){
-    const ids = ['faceSelect','backerSelect','labelSelect','textSelect','accentSelect','accent2Select'];
-    const data = window.FILAMENTS || [];
-    ids.forEach(id => {
-      const sel = document.getElementById(id);
-      if (!sel) return;
-      sel.innerHTML = '';
-      data.forEach(f => {
-        const opt = document.createElement('option');
-        opt.value = f.id;
-        opt.textContent = `${f.brand} — ${f.name}`;
-        opt.dataset.hex = f.hex || '';
-        opt.dataset.metallic = f.metallic ?? 0.0;
-        opt.dataset.roughness = f.roughness ?? 0.6;
-        sel.appendChild(opt);
-      });
+function populateSelectors(){
+  const ids = ['faceSelect','backerSelect','labelSelect','textSelect','accentSelect','accent2Select'];
+  const data = window.FILAMENTS || [];
+  ids.forEach(id => {
+    const sel = document.getElementById(id);
+    if (!sel) return;
+    sel.innerHTML = '';
+
+    // optional placeholder
+    // const opt0 = document.createElement('option');
+    // opt0.value = '';
+    // opt0.textContent = 'Select filament…';
+    // sel.appendChild(opt0);
+
+    data.forEach(f => {
+      const opt = document.createElement('option');
+      opt.value = f.id;
+      const brand  = f.brand ? `${f.brand} — ` : '';
+      const finish = f.finish ? ` (${f.finish})` : '';
+      opt.textContent = `${brand}${f.name}${finish}`;   // <- what closed select shows
+      opt.dataset.hex = f.hex || '';
+      opt.dataset.metallic = f.metallic ?? 0.0;
+      opt.dataset.roughness = f.roughness ?? 0.6;
+      sel.appendChild(opt);
     });
-  }
+  });
+}
+
 
   function attachAllPickers(){
     ['faceSelect','backerSelect','labelSelect','textSelect','accentSelect','accent2Select']
@@ -246,8 +259,8 @@
       attachAllPickers();
 
       // hide native selects after the picker is wired
-      ['faceSelect','backerSelect','labelSelect','textSelect','accentSelect','accent2Select']
-        .forEach(id => document.getElementById(id)?.classList.add('visually-hidden'));
+      //['faceSelect','backerSelect','labelSelect','textSelect','accentSelect','accent2Select']
+      //  .forEach(id => document.getElementById(id)?.classList.add('visually-hidden'));
 
       applyCurrentSelection();
       refreshAllBuyButtons();
